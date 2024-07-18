@@ -41,6 +41,7 @@
 
 ```bash
 cd tourist-ui
+npm install
 npm run serve
 ```
 
@@ -48,12 +49,11 @@ npm run serve
 
 ```bash
 cd ruoyi-ui
+npm install
 npm run dev
 ```
 
 若有版本问题，参考
-
-
 
 ```bash
 export NODE_OPTIONS=--openssl-legacy-provider
