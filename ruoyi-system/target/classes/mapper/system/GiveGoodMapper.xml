@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GiveGoodMapper">
+    
+    <resultMap type="GiveGood" id="GiveGoodResult">
+        <result property="id"    column="id"    />
+        <result property="tid"    column="tid"    />
+        <result property="tname"    column="tname"    />
+        <result property="userName"    column="user_name"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectGiveGoodVo">
+        select id, tid, tname, user_name, create_user, create_time, update_user, update_time, is_deleted from give_good
+    </sql>
+
+    <select id="selectGiveGoodList" parameterType="GiveGood" resultMap="GiveGoodResult">
+        <include refid="selectGiveGoodVo"/>
+        <where>  
+            <if test="tid != null "> and tid = #{tid}</if>
+            <if test="tname != null  and tname != ''"> and tname like concat('%', #{tname}, '%')</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="updateUser != null "> and update_user = #{updateUser}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectGiveGoodById" parameterType="Integer" resultMap="GiveGoodResult">
+        <include refid="selectGiveGoodVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGiveGood" parameterType="GiveGood" useGeneratedKeys="true" keyProperty="id">
+        insert into give_good
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tid != null">tid,</if>
+            <if test="tname != null">tname,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tid != null">#{tid},</if>
+            <if test="tname != null">#{tname},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGiveGood" parameterType="GiveGood">
+        update give_good
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tid != null">tid = #{tid},</if>
+            <if test="tname != null">tname = #{tname},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGiveGoodById" parameterType="Integer">
+        delete from give_good where id = #{id}
+    </delete>
+
+    <delete id="deleteGiveGoodByIds" parameterType="String">
+        delete from give_good where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

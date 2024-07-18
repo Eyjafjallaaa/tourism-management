@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.FoodMapper">
+    
+    <resultMap type="Food" id="FoodResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="city"    column="city"    />
+        <result property="picture"    column="picture"    />
+        <result property="restaurant"    column="restaurant"    />
+        <result property="description"    column="description"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="price"    column="price"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectFoodVo">
+        select id, name,price, city,restaurant, description, picture, create_time, create_user, update_time, update_user, is_deleted from food
+    </sql>
+
+    <select id="selectFoodList" parameterType="Food" resultMap="FoodResult">
+        <include refid="selectFoodVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+            <if test="restaurant != null  and restaurant != ''"> and restaurant = #{restaurant}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="price != null and price !='' "> and price = #{price}</if>
+            <if test="updateUser != null "> and update_user = #{updateUser}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectFoodById" parameterType="Integer" resultMap="FoodResult">
+        <include refid="selectFoodVo"/>
+        where id = #{id}
+    </select>
+    <select id="getAll" resultMap="FoodResult">
+        select  * from food where is_deleted = 0
+    </select>
+
+    <insert id="insertFood" parameterType="Food" useGeneratedKeys="true" keyProperty="id">
+        insert into food
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="city != null">city,</if>
+            <if test="picture != null">picture,</if>
+            <if test="restaurant != null">restaurant,</if>
+            <if test="description != null">description,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="price != null">price,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="city != null">#{city},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="restaurant != null">#{restaurant},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="price != null">#{price},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFood" parameterType="Food">
+        update food
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="restaurant != null">restaurant = #{restaurant},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFoodById" parameterType="Integer">
+        delete from food where id = #{id}
+    </delete>
+
+    <delete id="deleteFoodByIds" parameterType="String">
+        delete from food where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

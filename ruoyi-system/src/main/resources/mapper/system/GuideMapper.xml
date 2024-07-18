@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GuideMapper">
+
+	<resultMap type="Guide" id="GuideResult">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="phone" column="phone" />
+		<result property="address" column="address" />
+		<result property="info" column="info" />
+		<result property="scenic" column="scenic" />
+		<result property="picture" column="picture" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="qualification" column="qualification"/>
+		<result property="age" column="age" />
+	</resultMap>
+
+	<sql id="selectGuideVo">
+		select id, name, phone, address, info, scenic, picture, create_time, update_time , qualification , age from guide
+	</sql>
+
+	<select id="selectGuideById" parameterType="Integer" resultMap="GuideResult">
+		<include refid="selectGuideVo"/>
+		where id = #{id}
+	</select>
+
+	<select id="getAll" resultMap="GuideResult">
+		select * from guide where is_deleted = 0
+	</select>
+
+	<insert id="insertGuide" parameterType="Guide" useGeneratedKeys="true" keyProperty="id">
+		insert into guide
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">name,</if>
+			<if test="picture != null">picture,</if>
+			<if test="age != null">age,</if>
+			<if test="info != null">info,</if>
+			<if test="phone != null">phone,</if>
+			<if test="qualification != null">qualification,</if>
+			<if test="address != null">address,</if>
+			<if test="scenic != null">scenic,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">#{name},</if>
+			<if test="picture != null">#{picture},</if>
+			<if test="age != null">#{age},</if>
+			<if test="info != null">#{info},</if>
+			<if test="phone != null">#{phone},</if>
+			<if test="qualification != null">#{qualification},</if>
+			<if test="address != null">#{address},</if>
+			<if test="scenic != null">#{scenic},</if>
+		</trim>
+	</insert>
+	<select id="selectGuideList" parameterType="Guide" resultMap="GuideResult">
+		<include refid="selectGuideVo"/>
+		<where>
+			<if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+			<if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+			<if test="info != null  and info != ''"> and info = #{info}</if>
+			<if test="scenic != null  and scenic != ''"> and scenic = #{scenic}</if>
+			<if test="phone != null  and phone != ''"> and price = #{phone}</if>
+			<if test="address != null  and address != ''"> and address = #{address}</if>
+			<if test="qualification != null  and qualification != ''"> and qualification = #{qualification}</if>
+			<if test="age != null  and age != ''"> and age = #{age}</if>
+		</where>
+	</select>
+	<update id="updateGuide" parameterType="Guide">
+		update guide
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null">name = #{name},</if>
+			<if test="phone != null">phone = #{phone},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="info != null">info = #{info},</if>
+			<if test="scenic != null">scenic = #{scenic},</if>
+			<if test="picture != null">picture = #{picture},</if>
+			<if test="qualification != null">qualification = #{qualification},</if>
+			<if test="age != null">age = #{age},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteGuideById" parameterType="Integer">
+		delete from guide where id = #{id}
+	</delete>
+
+	<delete id="deleteGuideByIds" parameterType="List">
+		delete from guide where id in
+		<foreach item="id" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<select id="selectGuideByName" parameterType="String" resultMap="GuideResult">
+		<include refid="selectGuideVo"/>
+		where name = #{name}
+	</select>
+	<select id="selectGuideByAddress" parameterType="String" resultMap="GuideResult">
+		<include refid="selectGuideVo"/>
+		where address = #{address}
+	</select>
+	<select id="selectGuideByScenic" parameterType="String" resultMap="GuideResult">
+		<include refid="selectGuideVo"/>
+		where scenic = #{scenic}
+	</select>
+
+	<!-- Select a list of guides by address -->
+	<select id="selectGuideListByAddress" parameterType="String" resultMap="GuideResult">
+		<include refid="selectGuideVo"/>
+		where scenic = #{address}   <!-- Assuming 'address' is a column in the 'guide' table that stores scenic information -->
+	</select>
+
+	<!-- Select a list of guides by scenic -->
+	<select id="selectGuideListByScenic" parameterType="String" resultMap="GuideResult">
+		<include refid="selectGuideVo"/>
+		where scenic = #{scenic}
+	</select>
+
+</mapper>

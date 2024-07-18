@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- xml的编码 -->
+<!-- mybatis的config文件定义格式 -->
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--1.配置数据源的属性集文件-->
+    <properties resource="jdbc.properties"></properties>
+    <!--2.开启驼峰命名规则-->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <!--3.配置类型别名-->
+    <typeAliases>
+        <!--配置一个具体的类-->
+        <typeAlias type="com.ruoyi.system.domain.Car" alias="Car"></typeAlias>
+        <!--扫描实体类的包-->
+        <package name="com.ruoyi.system.domain"></package>
+    </typeAliases>
+    <!--4.配置JDBC连接-->
+    <environments default="connect1">
+        <environment id="connect1">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql.driver}"></property>
+                <property name="url" value="${mysql.url}"></property>
+                <property name="username" value="${mysql.username}"></property>
+                <property name="password" value="${mysql.password}"></property>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--5.加载dao层对应mapper(映射)文件-->
+    <mappers>
+        <mapper resource="mapper/system/CarMapper.xml"></mapper>
+        <mapper resource="mapper/system/AgencyMapper.xml"></mapper>
+    </mappers>
+</configuration>

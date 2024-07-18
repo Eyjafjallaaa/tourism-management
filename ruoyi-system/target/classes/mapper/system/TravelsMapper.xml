@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TravelsMapper">
+    
+    <resultMap type="Travels" id="TravelsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="content"    column="content"    />
+        <result property="picture"    column="picture"    />
+        <result property="goodNum"    column="good_num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectTravelsVo">
+        select id, name, content, picture, good_num,create_time, create_user, update_time, update_user, is_deleted from travels
+    </sql>
+
+    <select id="selectTravelsList" parameterType="Travels" resultMap="TravelsResult">
+        <include refid="selectTravelsVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+            <if test="goodNum != null  and goodNum != ''"> and good_num = #{goodNum}</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="updateUser != null "> and update_user = #{updateUser}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectTravelsById" parameterType="Integer" resultMap="TravelsResult">
+        <include refid="selectTravelsVo"/>
+        where id = #{id}
+    </select>
+    <select id="getHot" resultMap="TravelsResult">
+        <include refid="selectTravelsVo"/>
+        order by good_num desc limit 4
+    </select>
+    <select id="getMyTravels" resultMap="TravelsResult">
+        <include refid="selectTravelsVo"/>
+        where is_deleted = 0 and create_user = #{userId}
+    </select>
+
+
+    <insert id="insertTravels" parameterType="Travels" useGeneratedKeys="true" keyProperty="id">
+        insert into travels
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="content != null">content,</if>
+            <if test="picture != null">picture,</if>
+            <if test="goodNum != null">good_num,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="content != null">#{content},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="goodNum != null">#{goodNum},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTravels" parameterType="Travels">
+        update travels
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="goodNum != null">good_num = #{goodNum},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTravelsById" parameterType="Integer">
+        delete from travels where id = #{id}
+    </delete>
+
+    <delete id="deleteTravelsByIds" parameterType="String">
+        delete from travels where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

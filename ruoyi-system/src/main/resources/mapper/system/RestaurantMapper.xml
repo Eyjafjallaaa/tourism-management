@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RestaurantMapper">
+    <resultMap type="Restaurant" id="RestaurantResult" >
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="location" column="location"/>
+        <result property="picture" column="picture"/>
+        <result property="description" column="description"/>
+        <result property="avg_price" column="avg_price"/>
+        <result property="score" column="score"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+    <sql id="selectRestaurantVo">
+        select id,name,location,picture,description,avg_price,score from restaurant
+    </sql>
+
+    <select id="selectRestaurantList" parameterType="Restaurant" resultMap="RestaurantResult">
+        <include refid="selectRestaurantVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+            <if test="score != null  and score != ''"> and score = #{score}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="avg_price != null  and avg_price != ''"> and avg_price = #{avg_price}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="isDeleted != null " > and is_deleted = #{isDeleted}</if>
+
+        </where>
+    </select>
+
+    <select id="selectRestaurantById" parameterType="Integer" resultMap="RestaurantResult">
+        <include refid="selectRestaurantVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="getAll" resultMap="RestaurantResult">
+        select  * from restaurant where is_deleted = 0
+    </select>
+
+    <insert id="insertRestaurant" parameterType="Restaurant" useGeneratedKeys="true" keyProperty="id">
+        insert into restaurant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="picture != null">picture,</if>
+            <if test="score != null">score,</if>
+            <if test="description != null">description,</if>
+            <if test="avg_price != null">avg_price,</if>
+            <if test="location != null">location,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="score != null">#{score},</if>
+           <if test="description != null">#{description},</if>
+            <if test="avg_price != null">#{avg_price},</if>
+            <if test="location != null">#{location},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRestaurant" parameterType="Restaurant">
+        update restaurant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="avg_price != null">avg_price = #{avg_price},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRestaurantById" parameterType="Integer">
+        delete from restaurant where id = #{id}
+    </delete>
+
+    <delete id="deleteRestaurantByIds" parameterType="String">
+        delete from restaurant where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>

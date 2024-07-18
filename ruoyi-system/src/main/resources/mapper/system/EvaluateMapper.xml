@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EvaluateMapper">
+    
+    <resultMap type="Evaluate" id="EvaluateResult">
+        <result property="id"    column="id"    />
+        <result property="sname"    column="sname"    />
+        <result property="sid"    column="sid"    />
+        <result property="content"    column="content"    />
+        <result property="name"    column="name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectEvaluateVo">
+        select id, sname, sid, content, name, create_time, create_user, update_time, update_user, is_deleted from evaluate
+    </sql>
+
+    <select id="selectEvaluateList" parameterType="Evaluate" resultMap="EvaluateResult">
+        <include refid="selectEvaluateVo"/>
+        <where>  
+            <if test="sname != null  and sname != ''"> and sname like concat('%', #{sname}, '%')</if>
+            <if test="sid != null "> and sid = #{sid}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="updateUser != null "> and update_user = #{updateUser}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectEvaluateById" parameterType="Integer" resultMap="EvaluateResult">
+        <include refid="selectEvaluateVo"/>
+        where id = #{id}
+    </select>
+    <select id="getList" resultMap="EvaluateResult">
+        select * from evaluate where is_deleted =0 and sid=#{sid}
+    </select>
+    <select id="getMyEvaluate" resultMap="EvaluateResult">
+        select * from evaluate where is_deleted =0 and create_user=#{userId}
+    </select>
+
+    <insert id="insertEvaluate" parameterType="Evaluate" useGeneratedKeys="true" keyProperty="id">
+        insert into evaluate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sname != null">sname,</if>
+            <if test="sid != null">sid,</if>
+            <if test="content != null">content,</if>
+            <if test="name != null">name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sname != null">#{sname},</if>
+            <if test="sid != null">#{sid},</if>
+            <if test="content != null">#{content},</if>
+            <if test="name != null">#{name},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEvaluate" parameterType="Evaluate">
+        update evaluate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sname != null">sname = #{sname},</if>
+            <if test="sid != null">sid = #{sid},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEvaluateById" parameterType="Integer">
+        delete from evaluate where id = #{id}
+    </delete>
+
+    <delete id="deleteEvaluateByIds" parameterType="String">
+        delete from evaluate where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

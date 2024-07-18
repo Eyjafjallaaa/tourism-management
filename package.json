@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
+    "@kjgl77/datav-vue3": "^1.7.3",
+    "axios": "^1.7.2",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "echarts": "^5.5.1",
+    "element-plus": "^2.7.6",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.14",
+    "update-element-ui-theme": "^1.0.0"
+  }
+}

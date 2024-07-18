@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ViperMapper">
+    
+    <resultMap type="Viper" id="ViperResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="uname"    column="uname"    />
+        <result property="integral"    column="integral"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectViperVo">
+        select id, uid, uname, integral, create_time, create_user, update_time, update_user, is_deleted from viper
+    </sql>
+
+    <select id="selectViperList" parameterType="Viper" resultMap="ViperResult">
+        <include refid="selectViperVo"/>
+        <where>  
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="uname != null  and uname != ''"> and uname like concat('%', #{uname}, '%')</if>
+            <if test="integral != null  and integral != ''"> and integral = #{integral}</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="updateUser != null "> and update_user = #{updateUser}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectViperById" parameterType="Integer" resultMap="ViperResult">
+        <include refid="selectViperVo"/>
+        where id = #{id}
+    </select>
+    <select id="getIntegral" resultType="com.ruoyi.system.domain.Viper">
+        <include refid="selectViperVo"/>
+        where is_deleted =0 and  uid = #{userId}
+    </select>
+
+    <insert id="insertViper" parameterType="Viper" useGeneratedKeys="true" keyProperty="id">
+        insert into viper
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">uid,</if>
+            <if test="uname != null">uname,</if>
+            <if test="integral != null">integral,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">#{uid},</if>
+            <if test="uname != null">#{uname},</if>
+            <if test="integral != null">#{integral},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateViper" parameterType="Viper">
+        update viper
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="uname != null">uname = #{uname},</if>
+            <if test="integral != null">integral = #{integral},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteViperById" parameterType="Integer">
+        delete from viper where id = #{id}
+    </delete>
+
+    <delete id="deleteViperByIds" parameterType="String">
+        delete from viper where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
